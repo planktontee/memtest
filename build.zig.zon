@@ -1,0 +1,17 @@
+.{
+    .name = .memtest,
+    .version = "0.0.1",
+    .dependencies = .{
+        .zcasp = .{
+            .url = "git+https://github.com/planktontee/zcasp/#3a4d5b956cfdd556ab3f5e8726a2348b357cff01",
+            .hash = "zcasp-0.0.1-iIb82Lc3AwBA6fFuRrJDeRVWtlfxpSqRhkhC5WDewl2j",
+        },
+        .regent = .{
+            .url = "git+https://github.com/planktontee/regent/#7f8925233a23405a9529416e6dadee1c5fd7c953",
+            .hash = "regent-0.0.1-zgdbw-cuAAAqyrK_MdAT1upi5_SvkOAJuE4L7ctd4xyn",
+        },
+    },
+    .minimum_zig_version = "0.15.2",
+    .paths = .{""},
+    .fingerprint = 0xb7ad7e5e1c3a04ca,
+}

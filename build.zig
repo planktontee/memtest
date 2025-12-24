@@ -12,6 +12,8 @@ pub fn build(b: *std.Build) void {
         .link_libc = true,
     });
 
+    module.addAssemblyFile(.{ .cwd_relative = "impl.S" });
+
     module.addImport("regent", b.dependency("regent", .{
         .target = target,
         .optimize = optimize,
@@ -29,6 +31,8 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);
+    const installAssembly = b.addInstallBinFile(exe.getEmittedAsm(), "memtest.s");
+    b.getInstallStep().dependOn(&installAssembly.step);
 
     run_cmd.step.dependOn(b.getInstallStep());
 

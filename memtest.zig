@@ -194,6 +194,7 @@ pub noinline fn nonTemporalMemsetAVX2(dst: []u8, targetBuff: []const u8, elapsed
     var ptr = dst.ptr;
     const end = dst.ptr + dst.len;
 
+    timer.reset();
     asm volatile (
         \\ vmovdqu (%[src]), %%ymm0
         \\ vmovaps %%ymm0, %%ymm1
@@ -203,23 +204,7 @@ pub noinline fn nonTemporalMemsetAVX2(dst: []u8, targetBuff: []const u8, elapsed
         \\ vmovaps %%ymm0, %%ymm5
         \\ vmovaps %%ymm0, %%ymm6
         \\ vmovaps %%ymm0, %%ymm7
-        :
-        : [src] "r" (targetBuff.ptr),
-        : .{
-          .ymm0 = true,
-          .ymm1 = true,
-          .ymm2 = true,
-          .ymm3 = true,
-          .ymm4 = true,
-          .ymm5 = true,
-          .ymm6 = true,
-          .ymm7 = true,
-          .memory = true,
-        });
-
-    timer.reset();
-
-    asm volatile (
+        \\
         \\ .align 16
         \\ 1:
         \\   vmovntdq %%ymm0, 0(%[ptr])
@@ -258,6 +243,7 @@ pub noinline fn nonTemporalMemsetAVX512(dst: []u8, targetBuff: []const u8, elaps
     var ptr = dst.ptr;
     const end = dst.ptr + dst.len;
 
+    timer.reset();
     asm volatile (
         \\ vmovdqu64 (%[src]), %%zmm0
         \\ vmovaps %%zmm0, %%zmm1
@@ -267,24 +253,7 @@ pub noinline fn nonTemporalMemsetAVX512(dst: []u8, targetBuff: []const u8, elaps
         \\ vmovaps %%zmm0, %%zmm5
         \\ vmovaps %%zmm0, %%zmm6
         \\ vmovaps %%zmm0, %%zmm7
-        :
-        : [src] "r" (targetBuff.ptr),
-        : .{
-          .zmm0 = true,
-          .zmm1 = true,
-          .zmm2 = true,
-          .zmm3 = true,
-          .zmm4 = true,
-          .zmm5 = true,
-          .zmm6 = true,
-          .zmm7 = true,
-          .memory = true,
-          .cc = true,
-        });
-
-    timer.reset();
-
-    asm volatile (
+        \\
         \\ .align 64
         \\ 1:
         \\   vmovntdq %%zmm0, 0(%[ptr])
@@ -296,7 +265,7 @@ pub noinline fn nonTemporalMemsetAVX512(dst: []u8, targetBuff: []const u8, elaps
         \\   vmovntdq %%zmm6, 384(%[ptr])
         \\   vmovntdq %%zmm7, 448(%[ptr])
         \\
-        \\   leaq 64(%[ptr]), %[ptr]
+        \\   leaq 512(%[ptr]), %[ptr]
         \\   cmp %[end], %[ptr]
         \\   jne 1b
         \\
